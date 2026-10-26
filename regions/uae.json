@@ -1,8 +1,8 @@
 {
   "id": "uae",
   "name": "United Arab Emirates",
+  "country": "AE",
+  "margin_km": 20,
   "source": "https://download.geofabrik.de/asia/gcc-states-latest.osm.pbf",
-  "source_name": "Geofabrik GCC States extract",
-  "bbox": [51.4, 22.5, 56.5, 26.3],
-  "clip_note": "Bounding box around the UAE; it includes small parts of neighbouring countries."
+  "source_name": "Geofabrik GCC States extract"
 }

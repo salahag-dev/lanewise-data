@@ -1,0 +1,6 @@
+{
+  "schema": 1,
+  "about": "Offline data packs for the Lanewise app, built from OpenStreetMap. Map data (c) OpenStreetMap contributors, available under the Open Database License.",
+  "repository": "https://github.com/salahag-dev/lanewise-data",
+  "regions": []
+}

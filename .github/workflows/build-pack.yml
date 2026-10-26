@@ -1,12 +1,19 @@
-name: Build region pack
+name: Build region packs
 
 on:
+  schedule:
+    # Mondays 04:00 UTC. Geofabrik refreshes its extracts each evening, so packs carry the previous night's data.
+    - cron: '0 4 * * 1'
   workflow_dispatch:
     inputs:
       region:
-        description: Region id (a file in regions/)
+        description: Region id (a file in regions/), or all
         required: true
-        default: uae
+        default: all
+      force:
+        description: Build even when Geofabrik has nothing newer than the published pack
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -15,11 +22,36 @@ env:
   # The routing tiles must match the Valhalla inside valhalla-mobile, which the app uses.
   VALHALLA_VERSION: 3.9.0
   PLANETILER_VERSION: 0.10.2
+  # Packs kept per region: the newest, and the one before so a download started from an older catalog finishes.
+  KEEP_PACKS: 2
 
 jobs:
+  plan:
+    runs-on: ubuntu-24.04
+    outputs:
+      regions: ${{ steps.plan.outputs.regions }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Pick the regions with newer data
+        id: plan
+        env:
+          REGION: ${{ inputs.region }}
+          FORCE: ${{ inputs.force }}
+        run: python3 scripts/plan.py
+
   build:
+    needs: plan
+    if: needs.plan.outputs.regions != '[]'
+    strategy:
+      fail-fast: false
+      matrix:
+        region: ${{ fromJSON(needs.plan.outputs.regions) }}
+    name: build (${{ matrix.region }})
     runs-on: ubuntu-24.04
     timeout-minutes: 150
+    env:
+      REGION: ${{ matrix.region }}
     steps:
       - uses: actions/checkout@v4
 
@@ -28,32 +60,35 @@ jobs:
           distribution: temurin
           java-version: '21'
 
-      - name: Read the region
-        id: region
-        run: |
-          f="regions/${{ inputs.region }}.json"
-          test -f "$f"
-          echo "source=$(jq -r .source "$f")" >> "$GITHUB_OUTPUT"
-          echo "bbox=$(jq -r '.bbox | join(",")' "$f")" >> "$GITHUB_OUTPUT"
-
-      - name: Install osmium
-        run: sudo apt-get update -q && sudo apt-get install -y -q osmium-tool
+      - name: Install osmium and the geometry libraries
+        run: sudo apt-get update -q && sudo apt-get install -y -q osmium-tool python3-shapely python3-pyproj
 
       - name: Download the OpenStreetMap extract and check Geofabrik's checksum
         id: source
         run: |
           mkdir -p work out
-          url="${{ steps.region.outputs.source }}"
-          curl -fsSL -o work/source.osm.pbf "$url"
+          latest=$(jq -r .source "regions/$REGION.json")
+          # The -latest URL redirects to the day's file; fetch that file and its checksum so both are the same day's.
+          url=$(curl -fsSIL -o /dev/null -w '%{url_effective}' "$latest")
+          curl -fsSL -D work/headers.txt -o work/source.osm.pbf "$url"
           curl -fsSL -o work/source.osm.pbf.md5 "$url.md5"
           md5=$(cut -d' ' -f1 work/source.osm.pbf.md5)
           echo "$md5  work/source.osm.pbf" | md5sum -c -
+          echo "url=$url" >> "$GITHUB_OUTPUT"
           echo "md5=$md5" >> "$GITHUB_OUTPUT"
-          echo "last_modified=$(curl -fsSI "$url" | tr -d '\r' | sed -n 's/^[Ll]ast-[Mm]odified: //p')" >> "$GITHUB_OUTPUT"
+          echo "last_modified=$(tr -d '\r' < work/headers.txt | sed -n 's/^[Ll]ast-[Mm]odified: //p' | tail -1)" >> "$GITHUB_OUTPUT"
           osmium fileinfo work/source.osm.pbf
 
-      - name: Clip to the region
-        run: osmium extract --bbox "${{ steps.region.outputs.bbox }}" --set-bounds --overwrite -o work/region.osm.pbf work/source.osm.pbf
+      - name: Work out the coverage from the country's border
+        id: coverage
+        run: |
+          country=$(jq -r .country "regions/$REGION.json")
+          osmium tags-filter work/source.osm.pbf "r/ISO3166-1:alpha2=$country" --overwrite -o work/border.osm.pbf
+          osmium export work/border.osm.pbf -f geojson --geometry-types=polygon -u type_id --overwrite -o work/border.geojson
+          python3 scripts/coverage.py "regions/$REGION.json" work/border.geojson out/coverage.geojson >> "$GITHUB_OUTPUT"
+
+      - name: Clip to the coverage
+        run: osmium extract -p out/coverage.geojson --set-bounds --overwrite -o work/region.osm.pbf work/source.osm.pbf
 
       - name: Build the routing tiles
         run: |
@@ -66,32 +101,82 @@ jobs:
             valhalla_build_tiles --config valhalla.json region.osm.pbf
             valhalla_build_extract --config valhalla.json -v
           '
-          sudo mv work/routing.tar out/routing.tar
-          sudo chown "$USER" out/routing.tar
+          sudo rm -rf work/tiles
+          sudo chown "$USER" work/routing.tar
+
+      - name: Compress the routing tiles for download
+        # The phone unpacks it once: Valhalla reads a plain tar.
+        run: xz -T0 -6 -c work/routing.tar > out/routing.tar.xz
+
+      - name: Month for the map sources cache
+        id: month
+        run: echo "month=$(date -u +%Y-%m)" >> "$GITHUB_OUTPUT"
+
+      # Water polygons and Natural Earth, about 1.3 GB, shared by every region and refreshed monthly.
+      - uses: actions/cache@v4
+        with:
+          path: work/sources
+          key: planetiler-sources-${{ env.PLANETILER_VERSION }}-${{ steps.month.outputs.month }}
 
       - name: Build the map tiles
+        env:
+          BBOX: ${{ steps.coverage.outputs.bbox }}
         run: |
           base="https://github.com/onthegomap/planetiler/releases/download/v$PLANETILER_VERSION"
           curl -fsSL -o work/planetiler.jar "$base/planetiler.jar"
           echo "$(curl -fsSL "$base/planetiler.jar.sha256" | cut -d' ' -f1)  work/planetiler.jar" | sha256sum -c -
           java -Xmx8g -jar work/planetiler.jar --osm-path=work/region.osm.pbf --output=out/map.pmtiles \
-            --bounds="${{ steps.region.outputs.bbox }}" --download --download-dir=work/sources --force
+            --bounds="$BBOX" --download --download-dir=work/sources --force
 
       - name: Write the manifest
         env:
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          SOURCE_URL: ${{ steps.source.outputs.url }}
+          SOURCE_MD5: ${{ steps.source.outputs.md5 }}
+          SOURCE_LAST_MODIFIED: ${{ steps.source.outputs.last_modified }}
         run: |
-          python3 scripts/manifest.py "regions/${{ inputs.region }}.json" work/source.osm.pbf \
-            "${{ steps.source.outputs.md5 }}" "${{ steps.source.outputs.last_modified }}" out
+          python3 scripts/manifest.py "regions/$REGION.json" work/source.osm.pbf "$SOURCE_MD5" "$SOURCE_LAST_MODIFIED" \
+            "$SOURCE_URL" work/routing.tar out
           ls -la out
+          df -h .
 
       - name: Publish the pack
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          stamp=$(jq -r '.source.osm_data_timestamp' out/manifest.json | tr -d ':-' | cut -c1-13 | tr 'T' '-')
-          tag="${{ inputs.region }}-$stamp"
-          name=$(jq -r '.region.name' out/manifest.json)
-          gh release create "$tag" out/manifest.json out/routing.tar out/map.pmtiles \
-            --title "$name · OpenStreetMap data as of $(jq -r '.source.osm_data_timestamp' out/manifest.json)" \
+          data=$(jq -r '.source.osm_data_timestamp' out/manifest.json)
+          tag="$REGION-$(echo "$data" | tr -d ':-' | cut -c1-13 | tr 'T' '-')"
+          # A rebuild from the same data (forced) gets its own tag.
+          if gh release view "$tag" > /dev/null 2>&1; then tag="$tag-b$GITHUB_RUN_NUMBER"; fi
+          gh release create "$tag" out/manifest.json out/map.pmtiles out/routing.tar.xz out/coverage.geojson \
+            --title "$(jq -r '.region.name' out/manifest.json) · OpenStreetMap data as of $data" \
             --notes-file out/notes.md
+
+  catalog:
+    needs: [plan, build]
+    # After the builds, even if one failed, so the packs that did build are offered.
+    if: always() && needs.plan.result == 'success'
+    runs-on: ubuntu-24.04
+    concurrency:
+      group: catalog
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: List every published pack and prune old ones
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 scripts/catalog.py "$KEEP_PACKS"
+
+      - name: Publish the catalog
+        env:
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          git add catalog.json
+          if git diff --cached --quiet; then echo "The catalog is unchanged."; exit 0; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          packs=$(jq -r '[.regions[] | "\(.name) \(.packs[0].source.osm_data_timestamp)"] | join(", ")' catalog.json)
+          git commit -q -m "Catalog: $packs" -m "$RUN_URL"
+          git pull -q --rebase
+          git push -q

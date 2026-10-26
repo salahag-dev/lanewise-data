@@ -1,0 +1,8 @@
+{
+  "id": "saudi-arabia",
+  "name": "Saudi Arabia",
+  "country": "SA",
+  "margin_km": 20,
+  "source": "https://download.geofabrik.de/asia/gcc-states-latest.osm.pbf",
+  "source_name": "Geofabrik GCC States extract"
+}

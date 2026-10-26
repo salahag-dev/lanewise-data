@@ -1,0 +1,8 @@
+{
+  "id": "bahrain",
+  "name": "Bahrain",
+  "country": "BH",
+  "margin_km": 20,
+  "source": "https://download.geofabrik.de/asia/gcc-states-latest.osm.pbf",
+  "source_name": "Geofabrik GCC States extract"
+}
