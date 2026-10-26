@@ -1,0 +1,97 @@
+name: Build region pack
+
+on:
+  workflow_dispatch:
+    inputs:
+      region:
+        description: Region id (a file in regions/)
+        required: true
+        default: uae
+
+permissions:
+  contents: write
+
+env:
+  # The routing tiles must match the Valhalla inside valhalla-mobile, which the app uses.
+  VALHALLA_VERSION: 3.9.0
+  PLANETILER_VERSION: 0.10.2
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 150
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Read the region
+        id: region
+        run: |
+          f="regions/${{ inputs.region }}.json"
+          test -f "$f"
+          echo "source=$(jq -r .source "$f")" >> "$GITHUB_OUTPUT"
+          echo "bbox=$(jq -r '.bbox | join(",")' "$f")" >> "$GITHUB_OUTPUT"
+
+      - name: Install osmium
+        run: sudo apt-get update -q && sudo apt-get install -y -q osmium-tool
+
+      - name: Download the OpenStreetMap extract and check Geofabrik's checksum
+        id: source
+        run: |
+          mkdir -p work out
+          url="${{ steps.region.outputs.source }}"
+          curl -fsSL -o work/source.osm.pbf "$url"
+          curl -fsSL -o work/source.osm.pbf.md5 "$url.md5"
+          md5=$(cut -d' ' -f1 work/source.osm.pbf.md5)
+          echo "$md5  work/source.osm.pbf" | md5sum -c -
+          echo "md5=$md5" >> "$GITHUB_OUTPUT"
+          echo "last_modified=$(curl -fsSI "$url" | tr -d '\r' | sed -n 's/^[Ll]ast-[Mm]odified: //p')" >> "$GITHUB_OUTPUT"
+          osmium fileinfo work/source.osm.pbf
+
+      - name: Clip to the region
+        run: osmium extract --bbox "${{ steps.region.outputs.bbox }}" --set-bounds --overwrite -o work/region.osm.pbf work/source.osm.pbf
+
+      - name: Build the routing tiles
+        run: |
+          docker run --rm -v "$PWD/work:/data" "ghcr.io/valhalla/valhalla:$VALHALLA_VERSION" bash -c '
+            set -e
+            cd /data
+            valhalla_build_config --mjolnir-tile-dir /data/tiles --mjolnir-tile-extract /data/routing.tar \
+              --mjolnir-admin /data/admins.sqlite > valhalla.json
+            valhalla_build_admins --config valhalla.json region.osm.pbf
+            valhalla_build_tiles --config valhalla.json region.osm.pbf
+            valhalla_build_extract --config valhalla.json -v
+          '
+          sudo mv work/routing.tar out/routing.tar
+          sudo chown "$USER" out/routing.tar
+
+      - name: Build the map tiles
+        run: |
+          base="https://github.com/onthegomap/planetiler/releases/download/v$PLANETILER_VERSION"
+          curl -fsSL -o work/planetiler.jar "$base/planetiler.jar"
+          echo "$(curl -fsSL "$base/planetiler.jar.sha256" | cut -d' ' -f1)  work/planetiler.jar" | sha256sum -c -
+          java -Xmx8g -jar work/planetiler.jar --osm-path=work/region.osm.pbf --output=out/map.pmtiles \
+            --bounds="${{ steps.region.outputs.bbox }}" --download --download-dir=work/sources --force
+
+      - name: Write the manifest
+        env:
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          python3 scripts/manifest.py "regions/${{ inputs.region }}.json" work/source.osm.pbf \
+            "${{ steps.source.outputs.md5 }}" "${{ steps.source.outputs.last_modified }}" out
+          ls -la out
+
+      - name: Publish the pack
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          stamp=$(jq -r '.source.osm_data_timestamp' out/manifest.json | tr -d ':-' | cut -c1-13 | tr 'T' '-')
+          tag="${{ inputs.region }}-$stamp"
+          name=$(jq -r '.region.name' out/manifest.json)
+          gh release create "$tag" out/manifest.json out/routing.tar out/map.pmtiles \
+            --title "$name · OpenStreetMap data as of $(jq -r '.source.osm_data_timestamp' out/manifest.json)" \
+            --notes-file out/notes.md
