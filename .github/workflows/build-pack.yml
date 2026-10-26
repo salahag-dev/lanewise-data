@@ -47,7 +47,6 @@ jobs:
       fail-fast: false
       matrix:
         region: ${{ fromJSON(needs.plan.outputs.regions) }}
-    name: build (${{ matrix.region }})
     runs-on: ubuntu-24.04
     timeout-minutes: 150
     env:
