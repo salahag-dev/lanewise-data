@@ -4,6 +4,62 @@
   "repository": "https://github.com/salahag-dev/lanewise-data",
   "regions": [
     {
+      "id": "bahrain",
+      "name": "Bahrain",
+      "country": "BH",
+      "bbox": [
+        50.07043,
+        25.35506,
+        51.12352,
+        26.86589
+      ],
+      "coverage_note": "The country's OpenStreetMap border plus 20 km, so roads that cross a border briefly stay routable.",
+      "packs": [
+        {
+          "tag": "bahrain-20261025-2121",
+          "published_at": "2026-10-26T07:45:40Z",
+          "source": {
+            "name": "Geofabrik GCC States extract",
+            "osm_data_timestamp": "2026-10-25T21:21:21Z",
+            "newest_object": "2026-10-25T21:18:08Z",
+            "last_modified": "Mon, 26 Oct 2026 00:16:07 GMT",
+            "md5": "903174491fa477c1dde45ba79a427daa"
+          },
+          "built_at": "2026-10-26T07:45:36Z",
+          "run": "https://github.com/salahag-dev/lanewise-data/actions/runs/40287476915",
+          "manifest_url": "https://github.com/salahag-dev/lanewise-data/releases/download/bahrain-20261025-2121/manifest.json",
+          "download_bytes": 19343055,
+          "installed_bytes": 48745267,
+          "files": [
+            {
+              "name": "map.pmtiles",
+              "bytes": 9453205,
+              "sha256": "1cfbe54c301ad16b196a7c40023c31adc9f48b6492e807ce32cefdf24b963db0",
+              "url": "https://github.com/salahag-dev/lanewise-data/releases/download/bahrain-20261025-2121/map.pmtiles"
+            },
+            {
+              "name": "routing.tar.xz",
+              "bytes": 9888668,
+              "sha256": "cf3d3d09857cbb1c13495ccd43c56b5f3950918e60ba739a1162bae1bb903fd8",
+              "compression": "xz",
+              "unpacked": {
+                "name": "routing.tar",
+                "bytes": 39290880,
+                "sha256": "00ee648b3e44cf01fbcd81e75931c294c7d28288971b2c4cbc79a3094d7cce80"
+              },
+              "url": "https://github.com/salahag-dev/lanewise-data/releases/download/bahrain-20261025-2121/routing.tar.xz"
+            },
+            {
+              "name": "coverage.geojson",
+              "bytes": 1182,
+              "sha256": "708f3d032677542cc4420deac16c6576f9ce02bdcca516808bc857f9cac58a0a",
+              "url": "https://github.com/salahag-dev/lanewise-data/releases/download/bahrain-20261025-2121/coverage.geojson"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "kuwait",
       "name": "Kuwait",
       "country": "KW",
