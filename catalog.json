@@ -2,5 +2,62 @@
   "schema": 1,
   "about": "Offline data packs for the Lanewise app, built from OpenStreetMap. Map data (c) OpenStreetMap contributors, available under the Open Database License.",
   "repository": "https://github.com/salahag-dev/lanewise-data",
-  "regions": []
+  "regions": [
+    {
+      "id": "bahrain",
+      "name": "Bahrain",
+      "country": "BH",
+      "bbox": [
+        50.07043,
+        25.35506,
+        51.12352,
+        26.86589
+      ],
+      "coverage_note": "The country's OpenStreetMap border plus 20 km, so roads that cross a border briefly stay routable.",
+      "packs": [
+        {
+          "tag": "bahrain-20261025-2121",
+          "published_at": "2026-10-26T07:30:06Z",
+          "source": {
+            "name": "Geofabrik GCC States extract",
+            "osm_data_timestamp": "2026-10-25T21:21:21Z",
+            "newest_object": "2026-10-25T21:18:08Z",
+            "last_modified": "Mon, 26 Oct 2026 00:16:07 GMT",
+            "md5": "903174491fa477c1dde45ba79a427daa"
+          },
+          "built_at": "2026-10-26T07:30:03Z",
+          "run": "https://github.com/salahag-dev/lanewise-data/actions/runs/40285872996",
+          "manifest_url": "https://github.com/salahag-dev/lanewise-data/releases/download/bahrain-20261025-2121/manifest.json",
+          "download_bytes": 19340188,
+          "installed_bytes": 48745268,
+          "files": [
+            {
+              "name": "map.pmtiles",
+              "bytes": 9453205,
+              "sha256": "1cfbe54c301ad16b196a7c40023c31adc9f48b6492e807ce32cefdf24b963db0",
+              "url": "https://github.com/salahag-dev/lanewise-data/releases/download/bahrain-20261025-2121/map.pmtiles"
+            },
+            {
+              "name": "routing.tar.xz",
+              "bytes": 9885800,
+              "sha256": "4afbf7f371304e74d5a9c93add5a83dbc31e1ce092d199a3f9934ece7421307a",
+              "compression": "xz",
+              "unpacked": {
+                "name": "routing.tar",
+                "bytes": 39290880,
+                "sha256": "a478a860c3abfa1fe18abce25ef332ff4feb711a48ed02b34a52af2902201572"
+              },
+              "url": "https://github.com/salahag-dev/lanewise-data/releases/download/bahrain-20261025-2121/routing.tar.xz"
+            },
+            {
+              "name": "coverage.geojson",
+              "bytes": 1183,
+              "sha256": "f9555599af50db4813f32da03636c99d9fecbd9668af1f215bb6249792fce371",
+              "url": "https://github.com/salahag-dev/lanewise-data/releases/download/bahrain-20261025-2121/coverage.geojson"
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }
