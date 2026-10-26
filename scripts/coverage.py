@@ -39,7 +39,9 @@ area = transform(to_degrees, area)
 
 geometry = mapping(area)
 geometry['coordinates'] = json.loads(json.dumps(geometry['coordinates']), parse_float=lambda x: round(float(x), 5))
-relation = borders[0].get('id', '')
+# osmium numbers areas itself: a relation's area id is twice the relation id plus one.
+area_id = borders[0].get('id', '')
+relation = str((int(area_id[1:]) - 1) // 2) if area_id.startswith('a') and int(area_id[1:]) % 2 else ''
 coverage = {
     'type': 'FeatureCollection',
     'features': [{
@@ -47,7 +49,7 @@ coverage = {
         'properties': {
             'region': region['id'],
             'name': region['name'],
-            'border': f"OpenStreetMap relation {relation.lstrip('r')} (ISO3166-1:alpha2={code})" if relation else f"ISO3166-1:alpha2={code}",
+            'border': f"OpenStreetMap relation {relation} (ISO3166-1:alpha2={code})" if relation else f"ISO3166-1:alpha2={code}",
             'margin_km': region['margin_km'],
         },
         'geometry': geometry,
