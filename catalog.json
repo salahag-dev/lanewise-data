@@ -212,6 +212,48 @@
       "coverage_note": "The country's OpenStreetMap border plus 20 km, so roads that cross a border briefly stay routable.",
       "packs": [
         {
+          "tag": "oman-20261115-2122",
+          "published_at": "2026-11-16T12:30:51Z",
+          "source": {
+            "name": "Geofabrik GCC States extract",
+            "osm_data_timestamp": "2026-11-15T21:22:28Z",
+            "newest_object": "2026-11-15T21:00:41Z",
+            "last_modified": "Sun, 15 Nov 2026 23:58:05 GMT",
+            "md5": "18e8f3c99892c57f7c178d6f57c5fc53"
+          },
+          "built_at": "2026-11-16T12:30:45Z",
+          "run": "https://github.com/salahag-dev/lanewise-data/actions/runs/43866298697",
+          "manifest_url": "https://github.com/salahag-dev/lanewise-data/releases/download/oman-20261115-2122/manifest.json",
+          "download_bytes": 93487047,
+          "installed_bytes": 181744099,
+          "files": [
+            {
+              "name": "map.pmtiles",
+              "bytes": 59483507,
+              "sha256": "0f914f28e5d1230b951248349fc0e8a9f5f39c89023f6f0093930ecf7c953c01",
+              "url": "https://github.com/salahag-dev/lanewise-data/releases/download/oman-20261115-2122/map.pmtiles"
+            },
+            {
+              "name": "routing.tar.xz",
+              "bytes": 33998308,
+              "sha256": "f18e4fc1d0b9acfac63bdb34fe4abd96ef8f869db86406009252989976784036",
+              "compression": "xz",
+              "unpacked": {
+                "name": "routing.tar",
+                "bytes": 122255360,
+                "sha256": "059072093cd367520b967bfc2e53c6d8825a9527310c489d342c92505ec50217"
+              },
+              "url": "https://github.com/salahag-dev/lanewise-data/releases/download/oman-20261115-2122/routing.tar.xz"
+            },
+            {
+              "name": "coverage.geojson",
+              "bytes": 5232,
+              "sha256": "2684d9039cfb7c82b55c4e3d6c82152ff93853f1f94742509e0b83fff5f87c33",
+              "url": "https://github.com/salahag-dev/lanewise-data/releases/download/oman-20261115-2122/coverage.geojson"
+            }
+          ]
+        },
+        {
           "tag": "oman-20261108-2121",
           "published_at": "2026-11-09T12:34:55Z",
           "source": {
@@ -252,48 +294,6 @@
               "url": "https://github.com/salahag-dev/lanewise-data/releases/download/oman-20261108-2121/coverage.geojson"
             }
           ]
-        },
-        {
-          "tag": "oman-20261101-2121",
-          "published_at": "2026-11-02T12:08:26Z",
-          "source": {
-            "name": "Geofabrik GCC States extract",
-            "osm_data_timestamp": "2026-11-01T21:21:36Z",
-            "newest_object": "2026-11-01T21:20:46Z",
-            "last_modified": "Mon, 02 Nov 2026 04:21:26 GMT",
-            "md5": "0b5781034a93ba0e7c208a1b91543024"
-          },
-          "built_at": "2026-11-02T12:08:20Z",
-          "run": "https://github.com/salahag-dev/lanewise-data/actions/runs/41440991556",
-          "manifest_url": "https://github.com/salahag-dev/lanewise-data/releases/download/oman-20261101-2121/manifest.json",
-          "download_bytes": 92968661,
-          "installed_bytes": 180084645,
-          "files": [
-            {
-              "name": "map.pmtiles",
-              "bytes": 59298613,
-              "sha256": "f9fcc39b4113b0a9a43c199cdf5db688ecb3910d1dc3766783f0c97b4eff3a17",
-              "url": "https://github.com/salahag-dev/lanewise-data/releases/download/oman-20261101-2121/map.pmtiles"
-            },
-            {
-              "name": "routing.tar.xz",
-              "bytes": 33664816,
-              "sha256": "32a59005ba9bef460a9b61d6c0bbc0d971b76b200a8b50c8455666c8dd672ba1",
-              "compression": "xz",
-              "unpacked": {
-                "name": "routing.tar",
-                "bytes": 120780800,
-                "sha256": "11aa9f327160caa18ec2186638171524c7798ff67333d8719cfff100f344735a"
-              },
-              "url": "https://github.com/salahag-dev/lanewise-data/releases/download/oman-20261101-2121/routing.tar.xz"
-            },
-            {
-              "name": "coverage.geojson",
-              "bytes": 5232,
-              "sha256": "2684d9039cfb7c82b55c4e3d6c82152ff93853f1f94742509e0b83fff5f87c33",
-              "url": "https://github.com/salahag-dev/lanewise-data/releases/download/oman-20261101-2121/coverage.geojson"
-            }
-          ]
         }
       ]
     },
@@ -309,6 +309,48 @@
       ],
       "coverage_note": "The country's OpenStreetMap border plus 20 km, so roads that cross a border briefly stay routable.",
       "packs": [
+        {
+          "tag": "qatar-20261115-2122",
+          "published_at": "2026-11-16T12:29:53Z",
+          "source": {
+            "name": "Geofabrik GCC States extract",
+            "osm_data_timestamp": "2026-11-15T21:22:28Z",
+            "newest_object": "2026-11-15T21:00:41Z",
+            "last_modified": "Sun, 15 Nov 2026 23:58:05 GMT",
+            "md5": "18e8f3c99892c57f7c178d6f57c5fc53"
+          },
+          "built_at": "2026-11-16T12:29:50Z",
+          "run": "https://github.com/salahag-dev/lanewise-data/actions/runs/43866298697",
+          "manifest_url": "https://github.com/salahag-dev/lanewise-data/releases/download/qatar-20261115-2122/manifest.json",
+          "download_bytes": 37744235,
+          "installed_bytes": 89384175,
+          "files": [
+            {
+              "name": "map.pmtiles",
+              "bytes": 19033135,
+              "sha256": "f158c1df565f52c24867004ec09f6c6370f2cf707375704d656d0f313e94effd",
+              "url": "https://github.com/salahag-dev/lanewise-data/releases/download/qatar-20261115-2122/map.pmtiles"
+            },
+            {
+              "name": "routing.tar.xz",
+              "bytes": 18708860,
+              "sha256": "6bfff73bc4e787cbba2ad600f2f5723e67888ce49882063a16e2318c06a6d178",
+              "compression": "xz",
+              "unpacked": {
+                "name": "routing.tar",
+                "bytes": 70348800,
+                "sha256": "ffc66e334e0d92ab6f7f9d8cb0cd763ae42cfc7a040cc8fec1e3e679232be309"
+              },
+              "url": "https://github.com/salahag-dev/lanewise-data/releases/download/qatar-20261115-2122/routing.tar.xz"
+            },
+            {
+              "name": "coverage.geojson",
+              "bytes": 2240,
+              "sha256": "6614e6fa7f84e0d093e72944ecd876dfe9b346e3bcda7e76a539ac084a574030",
+              "url": "https://github.com/salahag-dev/lanewise-data/releases/download/qatar-20261115-2122/coverage.geojson"
+            }
+          ]
+        },
         {
           "tag": "qatar-20261108-2121",
           "published_at": "2026-11-09T12:35:26Z",
@@ -348,48 +390,6 @@
               "bytes": 2240,
               "sha256": "6614e6fa7f84e0d093e72944ecd876dfe9b346e3bcda7e76a539ac084a574030",
               "url": "https://github.com/salahag-dev/lanewise-data/releases/download/qatar-20261108-2121/coverage.geojson"
-            }
-          ]
-        },
-        {
-          "tag": "qatar-20261101-2121",
-          "published_at": "2026-11-02T12:12:11Z",
-          "source": {
-            "name": "Geofabrik GCC States extract",
-            "osm_data_timestamp": "2026-11-01T21:21:36Z",
-            "newest_object": "2026-11-01T21:20:46Z",
-            "last_modified": "Mon, 02 Nov 2026 04:21:26 GMT",
-            "md5": "0b5781034a93ba0e7c208a1b91543024"
-          },
-          "built_at": "2026-11-02T12:12:07Z",
-          "run": "https://github.com/salahag-dev/lanewise-data/actions/runs/41440991556",
-          "manifest_url": "https://github.com/salahag-dev/lanewise-data/releases/download/qatar-20261101-2121/manifest.json",
-          "download_bytes": 37217831,
-          "installed_bytes": 88840867,
-          "files": [
-            {
-              "name": "map.pmtiles",
-              "bytes": 18500067,
-              "sha256": "e8c257501fc615a611260352e791b16574931bbc18f167d4b3d4a03d119d7a86",
-              "url": "https://github.com/salahag-dev/lanewise-data/releases/download/qatar-20261101-2121/map.pmtiles"
-            },
-            {
-              "name": "routing.tar.xz",
-              "bytes": 18715524,
-              "sha256": "24f7939e6182895d47286881e2dee84015c13d08a3f246c6dba6a2859c03755a",
-              "compression": "xz",
-              "unpacked": {
-                "name": "routing.tar",
-                "bytes": 70338560,
-                "sha256": "e58f5d9365f9e6b0405d63647bc86a2938a502dd6fbc4c408ad988d9ec4bd060"
-              },
-              "url": "https://github.com/salahag-dev/lanewise-data/releases/download/qatar-20261101-2121/routing.tar.xz"
-            },
-            {
-              "name": "coverage.geojson",
-              "bytes": 2240,
-              "sha256": "6614e6fa7f84e0d093e72944ecd876dfe9b346e3bcda7e76a539ac084a574030",
-              "url": "https://github.com/salahag-dev/lanewise-data/releases/download/qatar-20261101-2121/coverage.geojson"
             }
           ]
         }
@@ -506,6 +506,48 @@
       "coverage_note": "The country's OpenStreetMap border plus 20 km, so roads that cross a border briefly stay routable.",
       "packs": [
         {
+          "tag": "uae-20261115-2122",
+          "published_at": "2026-11-16T12:30:46Z",
+          "source": {
+            "name": "Geofabrik GCC States extract",
+            "osm_data_timestamp": "2026-11-15T21:22:28Z",
+            "newest_object": "2026-11-15T21:00:41Z",
+            "last_modified": "Sun, 15 Nov 2026 23:58:05 GMT",
+            "md5": "18e8f3c99892c57f7c178d6f57c5fc53"
+          },
+          "built_at": "2026-11-16T12:30:42Z",
+          "run": "https://github.com/salahag-dev/lanewise-data/actions/runs/43866298697",
+          "manifest_url": "https://github.com/salahag-dev/lanewise-data/releases/download/uae-20261115-2122/manifest.json",
+          "download_bytes": 123171064,
+          "installed_bytes": 285464908,
+          "files": [
+            {
+              "name": "map.pmtiles",
+              "bytes": 65966973,
+              "sha256": "d0d070e3646dbc91301db5c68453e4c59c91d82cac2ebd90d26bebe063c4ec2a",
+              "url": "https://github.com/salahag-dev/lanewise-data/releases/download/uae-20261115-2122/map.pmtiles"
+            },
+            {
+              "name": "routing.tar.xz",
+              "bytes": 57200556,
+              "sha256": "9ac53b6542556bb7b1016968e22f54bc6eddb1ba33046426c380a556fc3da828",
+              "compression": "xz",
+              "unpacked": {
+                "name": "routing.tar",
+                "bytes": 219494400,
+                "sha256": "cf48f308578c95c355b456dbf9c14a097c2877df6c6d0020cdd091f561312019"
+              },
+              "url": "https://github.com/salahag-dev/lanewise-data/releases/download/uae-20261115-2122/routing.tar.xz"
+            },
+            {
+              "name": "coverage.geojson",
+              "bytes": 3535,
+              "sha256": "e59855dc9ccecff2ddb33b07fe8fd3d7a2bf1b6da2b6a05614f3f0f609f67dc8",
+              "url": "https://github.com/salahag-dev/lanewise-data/releases/download/uae-20261115-2122/coverage.geojson"
+            }
+          ]
+        },
+        {
           "tag": "uae-20261108-2121",
           "published_at": "2026-11-09T12:36:07Z",
           "source": {
@@ -544,48 +586,6 @@
               "bytes": 3535,
               "sha256": "e59855dc9ccecff2ddb33b07fe8fd3d7a2bf1b6da2b6a05614f3f0f609f67dc8",
               "url": "https://github.com/salahag-dev/lanewise-data/releases/download/uae-20261108-2121/coverage.geojson"
-            }
-          ]
-        },
-        {
-          "tag": "uae-20261101-2121",
-          "published_at": "2026-11-02T12:06:34Z",
-          "source": {
-            "name": "Geofabrik GCC States extract",
-            "osm_data_timestamp": "2026-11-01T21:21:36Z",
-            "newest_object": "2026-11-01T21:20:46Z",
-            "last_modified": "Mon, 02 Nov 2026 04:21:26 GMT",
-            "md5": "0b5781034a93ba0e7c208a1b91543024"
-          },
-          "built_at": "2026-11-02T12:06:27Z",
-          "run": "https://github.com/salahag-dev/lanewise-data/actions/runs/41440991556",
-          "manifest_url": "https://github.com/salahag-dev/lanewise-data/releases/download/uae-20261101-2121/manifest.json",
-          "download_bytes": 121488264,
-          "installed_bytes": 283996912,
-          "files": [
-            {
-              "name": "map.pmtiles",
-              "bytes": 64283937,
-              "sha256": "c0de7678b3ddd14cf2e043571712c9973b4ca8ba57e1c2ffd771374c0f658162",
-              "url": "https://github.com/salahag-dev/lanewise-data/releases/download/uae-20261101-2121/map.pmtiles"
-            },
-            {
-              "name": "routing.tar.xz",
-              "bytes": 57200792,
-              "sha256": "18a6c85babe5c80d426fe43a81424a1054237365d6cc944c1a9f141bbf671091",
-              "compression": "xz",
-              "unpacked": {
-                "name": "routing.tar",
-                "bytes": 219709440,
-                "sha256": "569dc7d1a7cf46d22fc0af01c3fb3fce0532d94dd2d80786b17c21f964720624"
-              },
-              "url": "https://github.com/salahag-dev/lanewise-data/releases/download/uae-20261101-2121/routing.tar.xz"
-            },
-            {
-              "name": "coverage.geojson",
-              "bytes": 3535,
-              "sha256": "e59855dc9ccecff2ddb33b07fe8fd3d7a2bf1b6da2b6a05614f3f0f609f67dc8",
-              "url": "https://github.com/salahag-dev/lanewise-data/releases/download/uae-20261101-2121/coverage.geojson"
             }
           ]
         }
